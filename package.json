@@ -1,0 +1,32 @@
+{
+  "name": "webtech2-shutter",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bootstrap-sass": "^3.3.7",
+    "bowserify": "^10.2.1",
+    "express": "^4.16.2",
+    "mongoose": "^5.5.0",
+    "uglify-js": "^3.3.21"
+  },
+  "scripts": {
+    "js": "bowserify js/bundle.js | uglifyjs > public/js/budle.js",
+    "css": "sass scss/style.scss -s compressed public/css/style.css",
+    "css-original": "scss scss/style.scss -t compressed public/css/style.css",
+    "prestart": "npm run css && npm run js",
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit -1"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bencelaszlo/webtech2-shutter.git"
+  },
+  "author": "Bence László",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bencelaszlo/webtech2-shutter/issues"
+  },
+  "homepage": "https://github.com/bencelaszlo/webtech2-shutter#readme"
+}
