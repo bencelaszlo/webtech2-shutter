@@ -20,7 +20,8 @@ var ShutterSchema = new Schema({
 	price: Number,
 	isPaid: Boolean,
 	isAssembled: Boolean,
-	isInstalled: Boolean,
+	isInvoiced: Boolean,
+	installationDate : String,
 	customer: String
 });
 
