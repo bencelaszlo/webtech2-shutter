@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 router.get('/list', (req, res) => {
     workerService.listOrders((orders) => {
        res.status(200).send(orders);
-    });
+    })
 });
 
 router.post('/assemble',(req, res) => {
