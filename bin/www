@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('webtech2-shutter:server');
+var debug = require('debug')('shutter-shop:server');
 var http = require('http');
 
 /**

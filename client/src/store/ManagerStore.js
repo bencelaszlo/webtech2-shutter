@@ -1,9 +1,11 @@
 import {EventEmitter} from 'events'
 
-class WorkerStore extends EventEmitter {
+class ManagerStore extends EventEmitter{
 
     _orders = [];
-    _requiredParts = null;
+    _ordersFromSelectedUser = null;
+    _statistics = {};
+    _selectedCustomer = {};
 
     emitChange() {
         this.emit('change')
@@ -19,4 +21,4 @@ class WorkerStore extends EventEmitter {
 
 }
 
-export default new WorkerStore();
+export default new ManagerStore();

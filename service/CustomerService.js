@@ -1,6 +1,8 @@
+//DAO
 var DAO = require('../dao/DAO.js');
 
 class CustomerService {
+
     getOrdersByName(customerName, callback) {
         DAO.readOrdersByCustomerName(customerName, callback);
     }
@@ -12,6 +14,7 @@ class CustomerService {
     payOrder(orderId, callback) {
         DAO.updateOrderPay(orderId, callback);
     }
+
 }
 
 module.exports = new CustomerService();

@@ -7,20 +7,21 @@ router.get('/', (req, res) => {
     router.handle(req, res);
 });
 
-router.get('/list', (req, res) => {
-    customerService.getOrdersByName(req.body['customer'], (orders) => {
+router.get('/list/:customer', (req, res) => {
+    customerService.getOrdersByName(req.params.customer, (orders) => {
         res.status(200).send(orders);
     })
 });
 
 router.post('/sendOrder', (req, res) => {
-    customerService.sendOrder(req, (callback) => {
+    console.log("ASD?=" + req.body);
+    customerService.sendOrder(req.body, (callback) => {
         res.status(200).send(callback);
     });
 });
 
-router.post('/pay', (req, res) => {
-    customerService.payOrder(req.body['_id'], (callback) => {
+router.post('/pay/:orderId', (req, res) => {
+    customerService.payOrder(req.params.orderId, (callback) => {
        res.status(200).send(callback);
     });
 });

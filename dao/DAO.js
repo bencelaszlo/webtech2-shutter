@@ -1,7 +1,10 @@
+// Schema
 var Shutter = require('./Shutter');
+// External dependencies
 var mongoose = require('mongoose');
 
 class DAO {
+
     readOrders(callback) {
         Shutter.find({}).exec(function(err, doc) {
             callback(doc);
@@ -16,26 +19,88 @@ class DAO {
 
     readPaymentStatusById(orderId, callback) {
         Shutter.findOne({'_id': orderId}).exec(function(err, order) {
-            callback(order.isPaid);
+            if (order !== null && order !== undefined) {
+                callback(order.isPaid);
+            } else {
+                console.log(err);
+                return({});
+            }
         });
     }
 
     readPartsByOrder(orderId, callback) {
         Shutter.findOne({'_id': orderId}).exec(function(err, order) {
-           callback(order.parts);
+            if (order !== null && order !== undefined) {
+                callback(order.parts);
+            } else {
+                console.log(err);
+                return({});
+            }
         });
     }
 
     readNextInstallationTime(orderId, callback) {
         var lastOrderId = Shutter.findOne({}).sort({date: -1}).exec(function(err, lastItem) {
-            if (lastItem !== null && lastItem.orderId !== undefined) {
-                lastOrderId = lastItem.orderId + 1;
+            if (lastItem !== null && lastItem._id !== undefined) {
+                lastOrderId = lastItem._id - 1;
             } else {
-                lastOrderId = 0;
+                console.log(err);
             }
-            console.log(lastOrderId);
             return(lastOrderId);
         });
+
+        var installationTime = Shutter.findOne({'_id': lastOrderId}).exec(function(err, lastTime) {
+            var now = new Date();
+            var timeForInstallation = {
+                "year": lastTime.getFullYear(),
+                "month": lastTime.getMonth() + 1,
+                "date": lastTime.getDate(),
+                "hours": lastTime.getHours(),
+            };
+
+            if ( (lastTime.installationDate.getTime() - now.getTime() ) > 0) {
+                if (lastTime.installationDate.hours === 16) {
+                    if (lastTime.getMonth() === 1) {
+                        if (lastTime.getDate() === 28) {
+                            timeForInstallation.date = 1;
+                            timeForInstallation.month++;
+                        } else {
+                            timeForInstallation.date++;
+                        }
+                    } else if ([0, 2, 4, 6, 7, 9, 11].includes(lastTime.getDate)) {
+                        if (lastTime.getDate === 31) {
+                            timeForInstallation.date = 1;
+                            timeForInstallation.month++;
+                        } else {
+                            timeForInstallation.date++;
+                        }
+                    } else {
+                        if (lastTime.getDate === 30) {
+                            timeForInstallation.date = 1;
+                            timeForInstallation.month++;
+                        } else {
+                            timeForInstallation.date++;
+                        }
+                    }
+                    timeForInstallation.hours = 8;
+                    timeForInstallation.minutes = 0;
+                }
+            }
+            return timeForInstallation;
+        });
+
+        Shutter.findOne({'_id': orderId}).exec(function(err, order) {
+            if (order !== null) {
+                order.installationDate = installationTime;
+                order.save();
+                callback(order);
+            } else {
+                console.log(err);
+                callback('{}');
+            }
+        });
+
+        callback(installationTime);
     }
 
     updateOrderPay(orderId, callback) {
@@ -65,6 +130,9 @@ class DAO {
     }
 
     writeOrder(order, callback) {
+        //order = JSON.parse(order);
+        //order = JSON.parse(order);
+        console.log("DAO DEBUG: " + order);
         Shutter.create({
             _id: new mongoose.Types.ObjectId(),
             parts: {
@@ -86,17 +154,6 @@ class DAO {
         });
     }
 
-    removeOrder(orderId, callback) {
-        Shutter.findOne({'_id': orderId}).exec(function (err, order) {
-            if (order !== null) {
-                order.deleteOne();
-                callback(orderId);
-            } else {
-                console.log(err);
-                callback('{}');
-            }
-        });
-    }
 }
 
 module.exports = new DAO();

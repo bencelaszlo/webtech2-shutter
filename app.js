@@ -1,17 +1,20 @@
+// External dependencies
 var express = require('express');
-var bodyParser = require('body-parser');
 var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
+// Routers
 var indexRouter = require('./routes/IndexRouter');
-var customerRouter = require('./routes/CustomerRouter.js');
-var workerRouter = require('./routes/WorkerRouter.js');
+var customerRouter = require('./routes/CustomerRouter');
+var workerRouter = require('./routes/WorkerRouter');
 var managerRouter = require('./routes/ManagerRouter');
-
 var app = express();
 
+app.use(logger('dev'));
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', indexRouter);

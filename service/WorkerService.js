@@ -1,6 +1,8 @@
-var DAO = require('../dao/DAO.js');
+// DAO
+var DAO = require('../dao/DAO');
 
 class WorkerService {
+
     listOrders(callback) {
         DAO.readOrders(callback);
     }
@@ -12,6 +14,7 @@ class WorkerService {
     listPartsByOrder(orderId, callback) {
         DAO.readPartsByOrder(orderId, callback);
     }
+
 }
 
 module.exports = new WorkerService();

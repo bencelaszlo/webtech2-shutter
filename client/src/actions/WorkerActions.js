@@ -1,15 +1,30 @@
+// Constants
 import AppConstants from '../constants/AppConstants'
-import AppDispatcher from '../dispatcher/AppDispatcher'
+// Dispatcher
+import AppDispatcher from '../dispatcher/AppDispatcher';
 
 class WorkerActions {
 
     listOrders() {
         AppDispatcher.handleViewAction({
-            actionType: AppConstants.LIST_ORDERS,
-            payload: null
+            actionType : AppConstants.WORKER_LIST_ORDERS,
+            payload : null
         });
     }
 
+    listParts(orderId) {
+        AppDispatcher.handleViewAction({
+            actionType : AppConstants.WORKER_LIST_PARTS,
+            payload : orderId
+        });
+    }
+
+    assembleShutter(orderId) {
+        AppDispatcher.handleViewAction({
+            actionType : AppConstants.WORKER_ASSEMBLE_SHUTTER,
+            payload : orderId
+        });
+    }
 }
 
 export default new WorkerActions();

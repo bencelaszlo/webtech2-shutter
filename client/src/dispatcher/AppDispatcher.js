@@ -1,44 +1,287 @@
+// External dependencies
 import {Dispatcher} from 'flux'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
+// Other
+import PushNotifications from "../notifications/PushNotifications";
+// Constants
 import AppConstants from '../constants/AppConstants'
-//import CustomerConstants from '../constants/CustomerConstants'
-//import WorkerConstants from '../constants/WorkerConstants'
-//import ManagerConstants from '../constants/ManagerConstants'
-//import CustomerStore from '../store/CustomerStore'
+// Stores
+import CustomerStore from "../store/CustomerStore";
 import WorkerStore from '../store/WorkerStore'
-//import ManagerStore from '../store/ManagerStore'
-//import OrderListByCustomerName from '../components/OrderListByCustomerName'
-import OrderList from '../components/OrderList'
+import ManagerStore from '../store/ManagerStore'
+// Components
+import WorkerPartsList from "../components/WorkerPartsList";
+import ManagerOrderListCustomer from "../components/ManagerOrderListCustomer";
+import CustomerOrderList from "../components/CustomerOrderList";
 
 class AppDispatcher extends Dispatcher {
 
     handleViewAction(action) {
         this.dispatch({
-            source: 'VIEW_ACTION',
-            payload: action
+            source : 'VIEW_ACTION',
+            payload : action
         });
     }
+
 }
 
 const dispatcher = new AppDispatcher();
 
-dispatcher.register( (data) => {
-   if (data.payload.actionType !== AppConstants.LIST_ORDERS) {
+// WORKER_LIST_ORDERS
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.WORKER_LIST_ORDERS) {
+        return;
+    }
+    fetch('/worker',{
+        headers : {
+            "Content-Type" : "application/json",
+            "Accept" : "application/json"
+        }
+    }).then(response => { return response.json() } )
+        .then(result => {
+            WorkerStore._orders = result;
+            WorkerStore.emitChange();
+        });
+});
+
+// WORKER_LIST_PARTS
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.WORKER_LIST_PARTS) {
+        return;
+    }
+    WorkerStore._requiredParts = WorkerStore._orders.find( (order) => {
+        return order._id === data.payload.payload;
+    });
+    fetch('/worker/listParts/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => { return response.json() } )
+        .then((res) => {
+            WorkerStore._requiredParts = res;
+            WorkerStore.emitChange();
+        });
+
+    ReactDOM.render(
+        React.createElement(WorkerPartsList),
+        document.getElementById('mainContent'));
+    WorkerStore.emitChange();
+});
+
+// WORKER_ASSEMBLE_SHUTTER
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.WORKER_ASSEMBLE_SHUTTER){
+        return;
+    }
+    var orderToAssemble = WorkerStore._orders.find( (order) => {
+        return order._id === data.payload.payload;
+    });
+    fetch('/worker/assemble/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        PushNotifications.pushAssembleNotification(orderToAssemble._id, response);
+    });
+});
+
+// MANAGER_LIST_ORDERS
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.MANAGER_LIST_ORDERS){
+        return;
+    }
+    fetch('/manager',{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then(response => { return response.json() } )
+        .then(result => {
+            ManagerStore._orders = result;
+            ManagerStore.emitChange();
+        });
+});
+
+// MANAGER_VIEW_CUSTOMER
+dispatcher.register((data) => {
+    if (data.payload.actionType !== AppConstants.MANAGER_VIEW_CUSTOMER) {
+        return;
+    }
+    ManagerStore._selectedCustomer = data.payload.payload;
+    ManagerStore._ordersFromSelectedUser = ManagerStore._orders.find( (order) => {
+        return order.customer === data.payload.payload;
+    });
+    fetch('/manager/viewCustomer/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => { return response.json() } )
+        .then((res) => {
+            ManagerStore._ordersFromSelectedUser = res;
+            ManagerStore.emitChange();
+        });
+
+    ReactDOM.render(
+        React.createElement(ManagerOrderListCustomer),
+        document.getElementById('mainContent'));
+    ManagerStore.emitChange();
+});
+
+// MANAGER_CREATE_INVOICE
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.MANAGER_CREATE_INVOICE){
+        return;
+    }
+    var orderToInvoice = ManagerStore._orders.find( (order) => {
+        return order._id === data.payload.payload;
+    });
+    fetch('/manager/createInvoice/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        PushNotifications.pushInvoiceNotification(orderToInvoice._id, response);
+    });
+});
+
+// MANAGER_CHECK_STATISTICS
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.MANAGER_CHECK_STATISTICS){
+        return;
+    }
+    fetch('/manager',{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then(response => { return response.json() } )
+        .then(result => {
+            var maxPrice = 0;
+            var avgPrice = 0;
+            var orderCount = 0;
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].price > maxPrice) {
+                    maxPrice = result[i].price;
+                }
+                avgPrice += result[i].price;
+                orderCount++;
+            }
+            avgPrice /= orderCount;
+
+            ManagerStore._statistics = {
+                "maxPrice": maxPrice,
+                "avgPrice": avgPrice,
+                "orderCount": orderCount
+            };
+            ManagerStore.emitChange();
+        });
+});
+
+// MANAGER_CHECK_PAYMENT
+dispatcher.register((data) => {
+    if (data.payload.actionType !== AppConstants.MANAGER_CHECK_PAYMENT) {
+        return;
+    }
+    fetch('/manager/checkPayment/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        var selectedOrder = ManagerStore._orders.find((order) => {
+            return order._id === data.payload.payload;
+        });
+        //var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
+        //ManagerStore._orders[selectedIndex].isPaid = response;
+        //ManagerStore.emitChange();
+    });
+});
+
+
+// MANAGER_ORGANIZE_INSTALLATION
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.MANAGER_ORGANIZE_INSTALLATION){
+        return;
+    }
+    fetch('/manager/createInvoice/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        var selectedOrder = ManagerStore._orders.find((order) => {
+            return order._id === data.payload.payload;
+        });
+        var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
+        console.log("selectedIndex=" + selectedIndex);
+        CustomerStore._orders[selectedIndex].installationDate = response;
+        CustomerStore.emitChange();
+    });
+});
+
+// CUSTOMER_LIST_ORDERS
+dispatcher.register((data) => {
+    if(data.payload.actionType !== AppConstants.CUSTOMER_LIST_ORDERS) {
+        return;
+    }
+    fetch('/customer/list/' + data.payload.payload, {
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then(response => { return response.json() } )
+        .then(result => {
+            console.log(result);
+            CustomerStore._orders = result;
+            CustomerStore.emitChange();
+        });
+
+    ReactDOM.render(
+        React.createElement(CustomerOrderList),
+        document.getElementById('mainContent'));
+    ManagerStore.emitChange();
+});
+
+// CUSTOMER_SEND_ORDER
+dispatcher.register((data) => {
+   if (data.payload.actionType !== AppConstants.CUSTOMER_SEND_ORDER) {
        return;
    }
-   fetch('/worker/list', {
+   console.log("DISPATCHER DEBUG = "  + JSON.stringify(data.payload.payload));
+   fetch('/customer/sendOrder/',{
+       method : 'POST',
        headers : {
            "Content-Type" : "application/json",
-           "Accept" : "application/json"
-       }
+       },
+       body : JSON.stringify(data.payload.payload)
    })
        .then((response) => {return response.json()})
        .then((result) => {
-           WorkerStore._orders = result;
-           WorkerStore.emitChange();
+           //console.log(result)
        })
+});
+
+// CUSTOMER_PAY_ORDER
+dispatcher.register((data) => {
+    if (data.payload.actionType !== AppConstants.CUSTOMER_PAY_ORDER){
+        return;
+    }
+    var orderToPay = CustomerStore._orders.find( (order) => {
+        return order._id === data.payload.payload;
+    });
+    fetch('/customer/pay/' + data.payload.payload,{
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "Accept" : "application/x-www-form-urlencoded"
+        }
+    }).then((response) => {
+        PushNotifications.pushPayNotification(orderToPay._id, response);
+    });
 });
 
 export default dispatcher;

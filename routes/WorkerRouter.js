@@ -1,5 +1,7 @@
+// External dependencies
 var express = require('express');
 var router = express.Router();
+// Services
 var workerService = require('../service/WorkerService');
 
 router.get('/', (req, res) => {
@@ -13,14 +15,14 @@ router.get('/list', (req, res) => {
     })
 });
 
-router.post('/assemble',(req, res) => {
-    workerService.assembleShutter(req.body['_id'],(orders) => {
-        res.status(200).send(orders);
+router.get('/assemble/:orderId', (req, res) => {
+    workerService.assembleShutter(req.params.orderId, (response) => {
+        res.status(200).send(response);
     });
 });
 
-router.get('/listParts', (req, res) => {
-    workerService.listPartsByOrder(req.body['_id'],(parts) => {
+router.get('/listParts/:orderId', (req, res) => {
+    workerService.listPartsByOrder(req.params.orderId,(parts) => {
         res.status(200).send(parts);
     });
 });

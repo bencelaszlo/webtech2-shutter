@@ -1,30 +1,21 @@
 {
-  "name": "webtech2-shutter",
+  "name": "shutter-shop",
   "version": "1.0.0",
   "private": true,
-  "description": "",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "mongoose": "^5.5.0",
-    "debug": "^4.1.1"
-  },
-  "devDependencies": {
-    "mocha": "^6.1.4",
-    "chai": "^4.2.0",
-    "request": "^2.88.0"
-  },
   "scripts": {
     "start": "node ./bin/www",
     "test": "node node_modules/mocha/bin/mocha --recursive"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bencelaszlo/webtech2-shutter.git"
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "morgan": "~1.9.0",
+    "mongodb": "^3.2.3",
+    "mongoose": "^5.5.7"
   },
-  "author": "Bence László",
-  "bugs": {
-    "url": "https://github.com/bencelaszlo/webtech2-shutter/issues"
-  },
-  "homepage": "https://github.com/bencelaszlo/webtech2-shutter#readme"
+  "devDependencies": {
+    "mocha": "^6.1.4",
+    "chai": "^4.2.0"
+  }
 }

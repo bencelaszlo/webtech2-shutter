@@ -11,8 +11,7 @@ var ShutterSchema = new Schema({
 	_id: Schema.ObjectId,
 	parts: {
 		tiltBar: Number,
-		tiltBarConnector: Number,
-		catches: Number,
+		hinges: Number,
 		louvers: Number,
 		louverPins: Number,
 		glue: Number
@@ -21,7 +20,12 @@ var ShutterSchema = new Schema({
 	isPaid: Boolean,
 	isAssembled: Boolean,
 	isInvoiced: Boolean,
-	installationDate : String,
+	installationDate : {
+		"year": Number,
+		"month": Number,
+		"day": Number,
+		"hours": Number,
+	},
 	customer: String
 });
 

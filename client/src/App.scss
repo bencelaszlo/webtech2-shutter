@@ -1,1 +1,30 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/bootstrap/scss/variables";
+
+$primary: #18121E;
+$secondary: #233237;
+$success: #015249;
+$info: #008F95;
+$warning: #EAC67A;
+$danger: #984b32;
+$light: #C5C1C0;
+$dark: #0A1612;
+
+html body {
+    background-color: $danger !important;
+    //color: $light !important;
+}
+
+button {
+    max-height: 48px;
+}
+
+#mainContent {
+    background-color: $primary !important;
+    //color: $light !important;
+}
+
+#sideBar {
+    background-color: $secondary !important;
+    //color: $light !important;
+}
