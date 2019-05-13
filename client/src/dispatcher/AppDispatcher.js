@@ -13,7 +13,6 @@ import ManagerStore from '../store/ManagerStore'
 // Components
 import WorkerPartsList from "../components/WorkerPartsList";
 import ManagerOrderListCustomer from "../components/ManagerOrderListCustomer";
-import CustomerOrderList from "../components/CustomerOrderList";
 import ManagerPaymentPanel from "../components/ManagerPaymentPanel";
 
 class AppDispatcher extends Dispatcher {
@@ -207,7 +206,6 @@ dispatcher.register((data) => {
     });
 });
 
-
 // MANAGER_ORGANIZE_INSTALLATION
 dispatcher.register((data) => {
     if(data.payload.actionType !== AppConstants.MANAGER_ORGANIZE_INSTALLATION){
@@ -218,26 +216,21 @@ dispatcher.register((data) => {
             "Content-Type" : "application/x-www-form-urlencoded",
             "Accept" : "application/x-www-form-urlencoded"
         }
-    }).then((response) => {
-        //var selectedOrder = ManagerStore._orders.find((order) => {
-        //    return order._id === data.payload.payload;
-        //});
-        console.log(response);
-       // var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
-        //CustomerStore._orders[selectedIndex].installationDate = response;
-        //CustomerStore.emitChange();s
-    });
+    }).then(response => { return response.json() } )
+        .then(result => {
+        PushNotifications.pushInstallationTimeNotification(data.payload.payload, result);
+        });
 });
 
 // CUSTOMER_LIST_ORDERS
 dispatcher.register((data) => {
-    if(data.payload.actionType !== AppConstants.CUSTOMER_LIST_ORDERS) {
+    if (data.payload.actionType !== AppConstants.CUSTOMER_LIST_ORDERS) {
         return;
     }
     fetch('/customer/list/' + data.payload.payload, {
-        headers : {
-            "Content-Type" : "application/x-www-form-urlencoded",
-            "Accept" : "application/x-www-form-urlencoded"
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/x-www-form-urlencoded"
         }
     }).then(response => { return response.json() } )
         .then(result => {
@@ -245,11 +238,6 @@ dispatcher.register((data) => {
             CustomerStore._orders = result;
             CustomerStore.emitChange();
         });
-
-    ReactDOM.render(
-        React.createElement(CustomerOrderList),
-        document.getElementById('mainContent'));
-    ManagerStore.emitChange();
 });
 
 // CUSTOMER_SEND_ORDER

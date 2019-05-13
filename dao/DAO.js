@@ -40,67 +40,48 @@ class DAO {
     }
 
     readNextInstallationTime(orderId, callback) {
-        var lastOrderId = Shutter.findOne({}).sort({date: -1}).exec(function(err, lastItem) {
-            if (lastItem !== null && lastItem._id !== undefined) {
-                //lastOrderId = lastItem._id;
-            } else {
-                console.log(err);
-            }
-            return(lastOrderId);
-        });
+        var lastDate = {
+            "year": 0,
+            "month": 0,
+            "day": 0,
+            "hours": 0
+        };
 
-        var installationTime = Shutter.findOne({'_id': lastOrderId}).exec(function(err, lastTime) {
-            var now = new Date();
-            var timeForInstallation = {
-                "year": lastTime.getFullYear(),
-                "month": lastTime.getMonth() + 1,
-                "date": lastTime.getDate(),
-                "hours": lastTime.getHours(),
-            };
-
-            if ( (lastTime.installationDate.getTime() - now.getTime() ) > 0) {
-                if (lastTime.installationDate.hours === 16) {
-                    if (lastTime.getMonth() === 1) {
-                        if (lastTime.getDate() === 28) {
-                            timeForInstallation.date = 1;
-                            timeForInstallation.month++;
-                        } else {
-                            timeForInstallation.date++;
-                        }
-                    } else if ([0, 2, 4, 6, 7, 9, 11].includes(lastTime.getDate)) {
-                        if (lastTime.getDate === 31) {
-                            timeForInstallation.date = 1;
-                            timeForInstallation.month++;
-                        } else {
-                            timeForInstallation.date++;
-                        }
-                    } else {
-                        if (lastTime.getDate === 30) {
-                            timeForInstallation.date = 1;
-                            timeForInstallation.month++;
-                        } else {
-                            timeForInstallation.date++;
+        Shutter.find({}).then(function (orders) {
+            orders.forEach(function(order) {
+                if (order.installationDate.year >= lastDate.year) {
+                    if (order.installationDate.month >= lastDate.month) {
+                        if (order.installationDate.day >= lastDate.day) {
+                            if (order.installationDate.hours > lastDate.hours) {
+                                lastDate = {
+                                    "year": order.installationDate.year,
+                                    "month": order.installationDate.month,
+                                    "day": order.installationDate.day,
+                                    "hours": order.installationDate.hours
+                                };
+                            }
                         }
                     }
-                    timeForInstallation.hours = 8;
-                    timeForInstallation.minutes = 0;
                 }
-            }
-            return timeForInstallation;
-        });
+            });
+            var timeForInstallation = {
+                "year": lastDate.year,
+                "month": lastDate.month,
+                "day": lastDate.day,
+                "hours": lastDate.hours + 1
+            };
 
-        Shutter.findOne({'_id': orderId}).exec(function(err, order) {
-            if (order !== null) {
-                order.installationDate = installationTime;
-                order.save();
-                callback(order);
-            } else {
-                console.log(err);
-                callback('{}');
-            }
-        });
+            Shutter.findOne({'_id': orderId}).exec(function(err, order) {
+                if (order !== null) {
+                    order.installationDate = timeForInstallation;
+                    order.save();
+                } else {
+                    console.log(err);
+                }
+            });
 
-        callback(installationTime);
+            callback(timeForInstallation);
+        });
     }
 
     updateOrderPay(orderId, callback) {

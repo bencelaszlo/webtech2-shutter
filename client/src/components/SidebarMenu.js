@@ -8,6 +8,8 @@ import ManagerOrderList from './ManagerOrderList';
 import ManagerStatisticsPanel from "./ManagerStatisticsPanel";
 import CustomerOrderList from "./ManagerOrderListCustomer";
 import CustomerNewOrder from "./CustomerNewOrder";
+import CustomerActions from "../actions/CustomerActions";
+import CustomerStore from "../store/CustomerStore";
 
 class SidebarMenu extends React.Component {
 

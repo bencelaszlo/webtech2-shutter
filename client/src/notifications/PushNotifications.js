@@ -56,6 +56,22 @@ class PushNotifications {
         });
     }
 
+    pushInstallationTimeNotification(orderId, installationTime) {
+        var installationTimeString = installationTime.year + "."
+            + installationTime.month + 1 + "."
+            + installationTime.day + " "
+            + installationTime.hours + ":00";
+
+        Push.create("Installation has been organized for orderID: " + orderId, {
+            body: installationTimeString,
+            timeout: 5000,
+            onClick: function () {
+                window.focus();
+                this.close();
+            }
+        });
+    }
+
 }
 
 export default new PushNotifications();
