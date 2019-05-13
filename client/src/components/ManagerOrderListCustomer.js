@@ -40,7 +40,7 @@ class ManagerOrderListCustomer extends React.Component {
                                 return (
                                     <div className="card>">
                                         <div className="card-header">Order ID: {order._id}</div>
-                                        <div className="card-body">
+                                        <div className="card-body" id={order._id}>
                                             <h5 className="card-title">{order.price} €</h5>
                                             <div className="btn-group btn-group-vertical">
                                                 <btn className="btn-danger btn-block" onClick={() => ManagerActions.createInvoice(order._id)}>Create Invoice</btn>
