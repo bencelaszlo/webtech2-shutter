@@ -15,7 +15,7 @@ class CustomerActions {
     sendOrder(order) {
         AppDispatcher.handleViewAction({
             actionType : AppConstants.CUSTOMER_SEND_ORDER,
-            payload : order
+            payload: order
         });
     }
 

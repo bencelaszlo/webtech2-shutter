@@ -14,7 +14,7 @@ router.get('/list/:customer', (req, res) => {
 });
 
 router.post('/sendOrder', (req, res) => {
-    customerService.sendOrder(req.body, (callback) => {
+    customerService.sendOrder(req, (callback) => {
         res.status(200).send(callback);
     });
 });

@@ -115,8 +115,7 @@ class DAO {
             _id: new mongoose.Types.ObjectId(),
             parts: {
                 tiltBar: order.body['tiltBar'],
-                tiltBarConnector: order.body['tiltBarConnector'],
-                catches: order.body['catches'],
+                hinges: order.body['hinges'],
                 louvers: order.body['louvers'],
                 louverPins: order.body['louverPins'],
                 glue: order.body['glue']
@@ -127,8 +126,8 @@ class DAO {
             isInvoiced: false,
             installationDate: "",
             customer: order.body['customer']
-        }, (err, doc) => {
-            callback(doc);
+        }, (err, result) => {
+            callback({"orderId": result._id, "error": err});
         });
     }
 

@@ -72,6 +72,24 @@ class PushNotifications {
         });
     }
 
+    pushNewOrderNotification(orderId, error) {
+        var successString = "";
+        if (error === null) {
+            successString  ="Order has been created";
+        } else {
+            successString  = "There was an error. Order has been not created."
+        }
+
+        Push.create(successString, {
+            body: "Order ID:" + orderId,
+            timeout: 5000,
+            onClick: function () {
+                window.focus();
+                this.close();
+            }
+        });
+    }
+
 }
 
 export default new PushNotifications();

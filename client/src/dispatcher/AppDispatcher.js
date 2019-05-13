@@ -245,17 +245,24 @@ dispatcher.register((data) => {
    if (data.payload.actionType !== AppConstants.CUSTOMER_SEND_ORDER) {
        return;
    }
+   console.log(data.payload.payload);
    fetch('/customer/sendOrder/',{
        method : 'POST',
        headers : {
-           "Content-Type" : "application/json",
-           'Accept': 'application/json'
+           "Content-Type": "application/x-www-form-urlencoded",
+           "Accept": "application/x-www-form-urlencoded"
        },
-       body : data.payload.payload
+       body : "tiltBar=" + data.payload.payload.parts.tiltBar + "&"
+           + "hinges=" + data.payload.payload.parts.hinges + "&"
+           + "louvers=" + data.payload.payload.parts.louvers + "&"
+           + "louverPins=" + data.payload.payload.parts.louverPins + "&"
+           + "glue=" + data.payload.payload.parts.glue + "&"
+           + "price=" + data.payload.payload.price + "&"
+           + "customer=" + data.payload.payload.customer
    })
        .then((response) => {return response.json()})
        .then((result) => {
-           console.log(result)
+           PushNotifications.pushNewOrderNotification(result.orderId, result.error);
        })
 });
 
