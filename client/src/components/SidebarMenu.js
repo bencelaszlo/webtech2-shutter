@@ -6,7 +6,6 @@ import CustomerNameForm from "./CustomerNameForm";
 import WorkerOrderList from "./WorkerOrderList";
 import ManagerOrderList from './ManagerOrderList';
 import ManagerStatisticsPanel from "./ManagerStatisticsPanel";
-import CustomerOrderList from "./ManagerOrderListCustomer";
 import CustomerNewOrder from "./CustomerNewOrder";
 import CustomerActions from "../actions/CustomerActions";
 import CustomerStore from "../store/CustomerStore";
@@ -21,11 +20,9 @@ class SidebarMenu extends React.Component {
 
     _onChange() {};
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
-    componentWillUnmount() {
-    }
+    componentWillUnmount() {}
 
     render() {
         return(
@@ -34,16 +31,16 @@ class SidebarMenu extends React.Component {
                 <div className="card-header">Customer</div>
                 <div className="card-body">
                     <ul className="list-group btn-block">
-                        <CustomerNameForm/>
-                    </ul>
-                    <ul className="list-group btn-block">
                         <btn className="btn btn-info" onClick={
                             () => ReactDOM.render(React.createElement(CustomerNewOrder), document.getElementById('mainContent'))
                         }>New Order</btn>
                     </ul>
-                    <ul className="list-group btn-block">
+                    <ul className="list-group btn-block btn-secondary">
+                        <CustomerNameForm/>
+                    </ul>
+                    <ul className="list-group btn-block btn-secondary">
                         <btn className="btn btn-info" onClick={
-                            () => ReactDOM.render(React.createElement(CustomerOrderList), document.getElementById('mainContent'))
+                            () => CustomerActions.listOrders(CustomerStore._name)
                         }>My Orders</btn>
                     </ul>
                 </div>

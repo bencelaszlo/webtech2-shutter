@@ -5,7 +5,7 @@ import ManagerStore from "../store/ManagerStore";
 // Actions
 import ManagerActions from "../actions/ManagerActions";
 
-class ManagerStatisticsPanel extends React.Component{
+class ManagerStatisticsPanel extends React.Component {
 
     constructor(props) {
         super(props);

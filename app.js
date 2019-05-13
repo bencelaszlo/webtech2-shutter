@@ -2,8 +2,6 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 
 // Routers
 var indexRouter = require('./routes/IndexRouter');
@@ -12,11 +10,8 @@ var workerRouter = require('./routes/WorkerRouter');
 var managerRouter = require('./routes/ManagerRouter');
 var app = express();
 
-app.use(logger('dev'));
-//app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', indexRouter);

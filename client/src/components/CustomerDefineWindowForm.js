@@ -1,7 +1,5 @@
 // External dependencies
 import React from 'react'
-// Actions
-import CustomerActions from "../actions/CustomerActions";
 // Stores
 import CustomerStore from "../store/CustomerStore";
 // Other
@@ -32,7 +30,7 @@ class CustomerDefineWindowForm extends React.Component{
     }
 
     _onChange() {
-        //this.setState({shoppingCart : CustomerStore._shoppingCart});
+        this.setState({shoppingCart : CustomerStore._shoppingCart});
     }
 
     componentDidMount() {

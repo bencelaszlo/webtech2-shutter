@@ -71,6 +71,21 @@ class DAO {
                 "hours": lastDate.hours + 1
             };
 
+            if (timeForInstallation.hours > 24) {
+                timeForInstallation.hours = 0;
+                timeForInstallation.day++;
+            }
+
+            if (timeForInstallation.day > 31) {
+                timeForInstallation.day = 1;
+                timeForInstallation.month++;
+            }
+
+            if(timeForInstallation.month > 12) {
+                timeForInstallation.month = 0;
+                timeForInstallation.year++;
+            }
+
             Shutter.findOne({'_id': orderId}).exec(function(err, order) {
                 if (order !== null) {
                     order.installationDate = timeForInstallation;

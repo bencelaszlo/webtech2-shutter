@@ -2,7 +2,6 @@
 import React from 'react';
 // Stores
 import ManagerStore from "../store/ManagerStore";
-// Actions
 
 class ManagerPaymentPanel extends React.Component {
 

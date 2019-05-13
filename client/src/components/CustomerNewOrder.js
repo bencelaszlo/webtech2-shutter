@@ -4,27 +4,19 @@ import React from 'react';
 import CustomerDefineWindowForm from './CustomerDefineWindowForm';
 import CustomerShoppingCart from './CustomerShoppingCart';
 // Stores
-import CustomerStore from "../store/CustomerStore";
 import CustomerNameForm from "./CustomerNameForm";
 
 class CustomerNewOrder extends React.Component {
     constructor(props) {
         super(props);
         this._onChange = this._onChange.bind(this);
-        //this.state = null;
     }
 
-    _onChange() {
-        //this.setState({});
-    }
+    _onChange() {}
 
-    componentDidMount() {
-        //CustomerStore.addChangeListener(this._onChange)
-    }
+    componentDidMount() {}
 
-    componentWillUnmount() {
-        //CustomerStore.removeChangeListener(this._onChange)
-    }
+    componentWillUnmount() {}
 
     render() {
         return(

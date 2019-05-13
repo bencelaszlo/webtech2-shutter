@@ -2,8 +2,6 @@
 import React from 'react'
 // Stores
 import CustomerStore from "../store/CustomerStore";
-// Actions
-import CustomerActions from "../actions/CustomerActions";
 
 class CustomerNameForm extends React.Component {
 

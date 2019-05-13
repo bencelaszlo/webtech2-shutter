@@ -11,7 +11,6 @@ class CustomerOrderList extends React.Component {
 
     constructor(props) {
         super(props);
-        CustomerActions.listOrders(CustomerStore._name);
         this._onChange = this._onChange.bind(this);
         this.state = { orders : []};
     }

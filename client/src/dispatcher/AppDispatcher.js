@@ -14,6 +14,7 @@ import ManagerStore from '../store/ManagerStore'
 import WorkerPartsList from "../components/WorkerPartsList";
 import ManagerOrderListCustomer from "../components/ManagerOrderListCustomer";
 import ManagerPaymentPanel from "../components/ManagerPaymentPanel";
+import CustomerOrderList from "../components/CustomerOrderList";
 
 class AppDispatcher extends Dispatcher {
 
@@ -234,10 +235,14 @@ dispatcher.register((data) => {
         }
     }).then(response => { return response.json() } )
         .then(result => {
-            console.log(result);
             CustomerStore._orders = result;
             CustomerStore.emitChange();
         });
+
+    ReactDOM.render(
+        React.createElement(CustomerOrderList),
+        document.getElementById('mainContent'));
+    CustomerStore.emitChange();
 });
 
 // CUSTOMER_SEND_ORDER
@@ -245,7 +250,6 @@ dispatcher.register((data) => {
    if (data.payload.actionType !== AppConstants.CUSTOMER_SEND_ORDER) {
        return;
    }
-   console.log(data.payload.payload);
    fetch('/customer/sendOrder/',{
        method : 'POST',
        headers : {
