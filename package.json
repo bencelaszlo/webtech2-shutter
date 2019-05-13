@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+  	"build": "./installer.sh",
     "start": "node ./bin/www",
     "test": "node node_modules/mocha/bin/mocha --recursive"
   },
