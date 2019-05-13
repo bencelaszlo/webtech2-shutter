@@ -200,6 +200,7 @@ dispatcher.register((data) => {
             });
             ManagerStore._selectedOrderPaymentStatus = result;
             ManagerStore.emitChange();
+
             ReactDOM.render(
                 React.createElement(ManagerPaymentPanel),
                 document.getElementById(selectedOrder._id));
