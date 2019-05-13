@@ -42,7 +42,7 @@ class DAO {
     readNextInstallationTime(orderId, callback) {
         var lastOrderId = Shutter.findOne({}).sort({date: -1}).exec(function(err, lastItem) {
             if (lastItem !== null && lastItem._id !== undefined) {
-                lastOrderId = lastItem._id - 1;
+                //lastOrderId = lastItem._id;
             } else {
                 console.log(err);
             }
@@ -130,9 +130,6 @@ class DAO {
     }
 
     writeOrder(order, callback) {
-        //order = JSON.parse(order);
-        //order = JSON.parse(order);
-        console.log("DAO DEBUG: " + order);
         Shutter.create({
             _id: new mongoose.Types.ObjectId(),
             parts: {

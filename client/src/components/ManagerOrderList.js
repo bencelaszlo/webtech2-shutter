@@ -37,7 +37,7 @@ class ManagerOrderList extends React.Component {
                                 return (
                                     <div className="card>">
                                         <div className="card-header">Order ID: {order._id}</div>
-                                        <div className="card-body">
+                                        <div className="card-body" id={order._id}>
                                             <h5 className="card-title">{order.price} €</h5>
                                             <h6 className="card-subtitle mb-2 text-muted">Customer: {order.customer}</h6>
                                             <div className="btn-group btn-group-vertical">

@@ -36,7 +36,6 @@ class CustomerShoppingCart extends React.Component {
             <div className="card">
                 <div className="card-header">Shopping Cart</div>
                 <div className="card-body">
-                    {console.log(this.state.shoppingCart)}
                     <ul className="list-group">
                         {
                         this.state.shoppingCart.map((order)=>{
@@ -50,8 +49,8 @@ class CustomerShoppingCart extends React.Component {
                         })
                         }
                     </ul>
-                    <btn className="btn-warning btn-block" onClick={() => this.sendEveryOrder(CustomerStore._shoppingCart)}>Send Order</btn>
                 </div>
+                <button className="btn-warning btn-block" onClick={() => this.sendEveryOrder(CustomerStore._shoppingCart)}>Send Order</button>
                 <div className="card-footer"></div>
             </div>
         )

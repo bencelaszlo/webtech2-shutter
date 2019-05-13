@@ -14,6 +14,7 @@ import ManagerStore from '../store/ManagerStore'
 import WorkerPartsList from "../components/WorkerPartsList";
 import ManagerOrderListCustomer from "../components/ManagerOrderListCustomer";
 import CustomerOrderList from "../components/CustomerOrderList";
+import ManagerPaymentPanel from "../components/ManagerPaymentPanel";
 
 class AppDispatcher extends Dispatcher {
 
@@ -192,13 +193,17 @@ dispatcher.register((data) => {
             "Content-Type" : "application/x-www-form-urlencoded",
             "Accept" : "application/x-www-form-urlencoded"
         }
-    }).then((response) => {
-        var selectedOrder = ManagerStore._orders.find((order) => {
-            return order._id === data.payload.payload;
-        });
-        //var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
-        //ManagerStore._orders[selectedIndex].isPaid = response;
-        //ManagerStore.emitChange();
+    }).then(response => { return response.json() } )
+        .then(result => {
+            var selectedOrder = ManagerStore._orders.find((order) => {
+                return order._id === data.payload.payload;
+            });
+            ManagerStore._selectedOrderPaymentStatus = result;
+            ManagerStore.emitChange();
+            ReactDOM.render(
+                React.createElement(ManagerPaymentPanel),
+                document.getElementById(selectedOrder._id));
+            ManagerStore.emitChange();
     });
 });
 
@@ -208,19 +213,19 @@ dispatcher.register((data) => {
     if(data.payload.actionType !== AppConstants.MANAGER_ORGANIZE_INSTALLATION){
         return;
     }
-    fetch('/manager/createInvoice/' + data.payload.payload,{
+    fetch('/manager/organizeInstallation/' + data.payload.payload,{
         headers : {
             "Content-Type" : "application/x-www-form-urlencoded",
             "Accept" : "application/x-www-form-urlencoded"
         }
     }).then((response) => {
-        var selectedOrder = ManagerStore._orders.find((order) => {
-            return order._id === data.payload.payload;
-        });
-        var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
-        console.log("selectedIndex=" + selectedIndex);
-        CustomerStore._orders[selectedIndex].installationDate = response;
-        CustomerStore.emitChange();
+        //var selectedOrder = ManagerStore._orders.find((order) => {
+        //    return order._id === data.payload.payload;
+        //});
+        console.log(response);
+       // var selectedIndex = ManagerStore._orders.indexOf(selectedOrder);
+        //CustomerStore._orders[selectedIndex].installationDate = response;
+        //CustomerStore.emitChange();s
     });
 });
 
@@ -252,17 +257,17 @@ dispatcher.register((data) => {
    if (data.payload.actionType !== AppConstants.CUSTOMER_SEND_ORDER) {
        return;
    }
-   console.log("DISPATCHER DEBUG = "  + JSON.stringify(data.payload.payload));
    fetch('/customer/sendOrder/',{
        method : 'POST',
        headers : {
            "Content-Type" : "application/json",
+           'Accept': 'application/json'
        },
-       body : JSON.stringify(data.payload.payload)
+       body : data.payload.payload
    })
        .then((response) => {return response.json()})
        .then((result) => {
-           //console.log(result)
+           console.log(result)
        })
 });
 

@@ -14,7 +14,6 @@ router.get('/list/:customer', (req, res) => {
 });
 
 router.post('/sendOrder', (req, res) => {
-    console.log("ASD?=" + req.body);
     customerService.sendOrder(req.body, (callback) => {
         res.status(200).send(callback);
     });

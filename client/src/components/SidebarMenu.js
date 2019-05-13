@@ -20,11 +20,9 @@ class SidebarMenu extends React.Component {
     _onChange() {};
 
     componentDidMount() {
-        //WorkerStore.addChangeListener(this._onChange)
     }
 
     componentWillUnmount() {
-        //WorkerStore.removeChangeListener(this._onChange)
     }
 
     render() {
@@ -34,12 +32,12 @@ class SidebarMenu extends React.Component {
                 <div className="card-header">Customer</div>
                 <div className="card-body">
                     <ul className="list-group btn-block">
+                        <CustomerNameForm/>
+                    </ul>
+                    <ul className="list-group btn-block">
                         <btn className="btn btn-info" onClick={
                             () => ReactDOM.render(React.createElement(CustomerNewOrder), document.getElementById('mainContent'))
                         }>New Order</btn>
-                    </ul>
-                    <ul className="list-group btn-block">
-                        <CustomerNameForm/>
                     </ul>
                     <ul className="list-group btn-block">
                         <btn className="btn btn-info" onClick={

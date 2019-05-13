@@ -6,6 +6,7 @@ class ManagerStore extends EventEmitter{
     _ordersFromSelectedUser = null;
     _statistics = {};
     _selectedCustomer = {};
+    _selectedOrderPaymentStatus = {};
 
     emitChange() {
         this.emit('change')

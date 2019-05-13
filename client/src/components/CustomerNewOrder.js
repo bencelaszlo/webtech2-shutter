@@ -11,19 +11,19 @@ class CustomerNewOrder extends React.Component {
     constructor(props) {
         super(props);
         this._onChange = this._onChange.bind(this);
-        this.state = null;
+        //this.state = null;
     }
 
     _onChange() {
-        this.setState({});
+        //this.setState({});
     }
 
     componentDidMount() {
-        CustomerStore.addChangeListener(this._onChange)
+        //CustomerStore.addChangeListener(this._onChange)
     }
 
     componentWillUnmount() {
-        CustomerStore.removeChangeListener(this._onChange)
+        //CustomerStore.removeChangeListener(this._onChange)
     }
 
     render() {

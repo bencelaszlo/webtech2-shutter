@@ -32,7 +32,7 @@ class CustomerDefineWindowForm extends React.Component{
     }
 
     _onChange() {
-        this.setState({shoppingCart : CustomerStore._shoppingCart});
+        //this.setState({shoppingCart : CustomerStore._shoppingCart});
     }
 
     componentDidMount() {
@@ -73,11 +73,11 @@ class CustomerDefineWindowForm extends React.Component{
                         </div>
                     </div>
 
-                    <button
+                    <btn
                         onClick={()=>{this.saveWindowToShoppingCard(this.state.width, this.state.height)}}
                         className="btn btn-success">
                         Add
-                    </button>
+                    </btn>
                 </div>
             </div>
         );
