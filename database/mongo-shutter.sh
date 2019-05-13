@@ -8,12 +8,7 @@ docker network create -d bridge --subnet $MONGO_NETWORK_MASK $MONGO_NETWORK_NAME
 
 docker run --detach --network $MONGO_NETWORK_NAME --ip $MONGO_HOST_IP mongo
 
-#wget http://guyharrison.squarespace.com/storage/sakila.tgz
-
-#tar xzvf sakila.tgz
 chmod +r *.json
 
-# mongoimport --host $MONGO_HOST_IP --db sakila --collection films films.json
-# mongoimport --host $MONGO_HOST_IP --db sakila --collection customers customers.json
 mongoimport --host $MONGO_HOST_IP --db shutters --collection shutters shutters.json
 mongo --host $MONGO_HOST_IP
